@@ -9,7 +9,7 @@ on:
         default: '0.0.0'
 
 env:
-  TEST_ARG: 'ABCD'
+  TEST_ARG: '${{ github.event.inputs.test_arg }}'
 
 jobs:
   test:
