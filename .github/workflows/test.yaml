@@ -39,4 +39,4 @@ jobs:
           go run ./cmd/nlp
       - if: inputs.test-switch == true
         run: |
-          echo Env sel is ${{ inputs.selection }}
+          echo Env sel is ${{ inputs.selection }} $TEST_ARG
