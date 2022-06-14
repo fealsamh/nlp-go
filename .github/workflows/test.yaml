@@ -3,13 +3,23 @@ name: Test
 on:
   workflow_dispatch:
     inputs:
-      test_arg:
+      test-arg:
         description: 'Test argument'
         required: true
         default: '0.0.0'
+      print-info:
+        type: boolean
+        description: 'Run tests'
+      selection:
+        type: choice
+        description: 'Where'
+        options:
+        - staging
+        - testing
+        - production
 
 env:
-  TEST_ARG: '${{ github.event.inputs.test_arg }}'
+  TEST_ARG: '${{ github.event.inputs.test-arg }}'
 
 jobs:
   test:
@@ -25,3 +35,6 @@ jobs:
       - uses: actions/checkout@v3
       - run: |
           go run ./cmd/nlp
+      - if: github.event.inputs.print-info == 'true'
+        run: |
+          echo env is ${{ github.event.inputs.selection }}
