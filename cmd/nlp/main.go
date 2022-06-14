@@ -8,4 +8,5 @@ import (
 
 func main() {
 	fmt.Printf("%s '%s'\n", runtime.GOOS, os.Getenv("TEST_ARG"))
+	os.Exit(1)
 }
