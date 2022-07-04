@@ -1,27 +1,10 @@
 name: Test
 
 on:
-  workflow_dispatch:
-    inputs:
-      test-arg:
-        description: 'Test argument'
-        required: true
-        default: '0.0.0'
-      test-switch:
-        type: boolean
-        default: true
-        description: 'Test switch'
-      selection:
-        type: choice
-        description: 'Environment'
-        default: testing
-        options:
-        - staging
-        - testing
-        - production
-
-env:
-  TEST_ARG: "${{ inputs.test-arg == 'aa' && 'AA' || inputs.test-arg == 'bb' && 'BB' || format('={0}', inputs.test-arg) }}"
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   test:
@@ -36,7 +19,4 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
       - run: |
-          go run ./cmd/nlp
-      - if: inputs.test-switch == true
-        run: |
-          echo Env sel is ${{ inputs.selection }} $TEST_ARG
+          go test -v ./...
