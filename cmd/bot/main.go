@@ -55,6 +55,11 @@ func main() {
 		signin(cl)
 	case "signup":
 		signup(cl)
+	case "check":
+		if flag.NArg() == 1 {
+			exitWithMessage("no input file provided")
+		}
+		check(flag.Arg(1))
 	default:
 		processed = false
 	}

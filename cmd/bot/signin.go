@@ -45,7 +45,7 @@ func signin(cl *aibot.Client) {
 			exitWithError(err)
 		}
 	}
-	f, err := os.Create(filepath.Join(dir, "sk"))
+	f, err := os.OpenFile(filepath.Join(dir, "sk"), os.O_CREATE|os.O_RDWR, 0600)
 	if err != nil {
 		exitWithError(err)
 	}
