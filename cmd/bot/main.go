@@ -32,7 +32,10 @@ func getSecretKey() string {
 	fp := filepath.Join(dir, ".aibot", "sk")
 	f, err := os.Open(fp)
 	if err != nil {
-		exitWithMessage("no secret key provided")
+		if os.IsNotExist(err) {
+			exitWithMessage("no secret key provided")
+		}
+		exitWithError(err)
 	}
 	defer f.Close()
 	b, err := io.ReadAll(f)
