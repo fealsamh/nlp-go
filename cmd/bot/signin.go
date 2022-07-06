@@ -14,12 +14,14 @@ import (
 
 func signin(cl *aibot.Client) {
 	r := bufio.NewReader(os.Stdin)
+	
 	fmt.Print("username: ")
 	u, err := r.ReadString('\n')
 	if err != nil {
 		exitWithError(err)
 	}
 	u = strings.TrimSpace(u)
+	
 	fmt.Print("password: ")
 	b, err := term.ReadPassword(int(syscall.Stdin))
 	if err != nil {
@@ -27,11 +29,13 @@ func signin(cl *aibot.Client) {
 	}
 	fmt.Print("\n")
 	p := string(b)
+	
 	sk, on, err := cl.Signin(u, p)
 	if err != nil {
 		exitWithError(err)
 	}
 	fmt.Println("organisation:", on)
+	
 	dir, err := os.UserHomeDir()
 	if err != nil {
 		exitWithError(err)
@@ -45,7 +49,7 @@ func signin(cl *aibot.Client) {
 			exitWithError(err)
 		}
 	}
-	f, err := os.Create(filepath.Join(dir, "sk"))
+	f, err := os.OpenFile(filepath.Join(dir, "sk"), os.O_CREATE|os.O_RDWR, 0600)
 	if err != nil {
 		exitWithError(err)
 	}
