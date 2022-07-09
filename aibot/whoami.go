@@ -1,9 +1,5 @@
 package aibot
 
-type whoamiRequest struct {
-	SecretKey string `json:"secret_key"`
-}
-
 type User struct {
 	ID       int      `json:"id"`
 	Username string   `json:"username"`
@@ -16,9 +12,7 @@ type User struct {
 
 func (c *Client) Whoami() (*User, error) {
 	var u *User
-	if err := c.callService("/api/v1/whoami", &whoamiRequest{
-		SecretKey: c.SecretKey,
-	}, &u); err != nil {
+	if err := c.callServiceGet("/api/v1/whoami", &u); err != nil {
 		return nil, err
 	}
 	return u, nil
