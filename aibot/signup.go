@@ -1,10 +1,5 @@
 package aibot
 
-import (
-	"bytes"
-	"encoding/json"
-)
-
 type signupRequest struct {
 	Username string `json:"username"`
 	Fullname string `json:"fullname"`
@@ -14,23 +9,14 @@ type signupRequest struct {
 }
 
 func (c *Client) Signup(username, fullname, email, password, orgName string) error {
-	b, err := json.Marshal(&signupRequest{
+	if err := c.callService("/api/v1/signup", &signupRequest{
 		Username: username,
 		Fullname: fullname,
 		Email:    email,
 		Password: password,
 		OrgName:  orgName,
-	})
-	if err != nil {
+	}, nil); err != nil {
 		return err
-	}
-	r, err := c.httpClient().Post(serviceUrl+"/api/v1/signup", "application/json", bytes.NewReader(b))
-	if err != nil {
-		return err
-	}
-	defer r.Body.Close()
-	if r.StatusCode >= 400 {
-		return c.httpError(r)
 	}
 	return nil
 }
