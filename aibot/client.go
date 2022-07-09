@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -40,7 +40,7 @@ func (c *Client) callService(path string, in, out interface{}) error {
 
 func (c *Client) httpError(r *http.Response) error {
 	msg := "failed to read error message"
-	if b, err := io.ReadAll(r.Body); err == nil {
+	if b, err := ioutil.ReadAll(r.Body); err == nil {
 		msg = strings.TrimSpace(string(b))
 	} else {
 		msg += " (" + err.Error() + ")"
