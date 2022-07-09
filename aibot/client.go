@@ -1,6 +1,8 @@
 package aibot
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -14,8 +16,30 @@ type Client struct {
 	SecretKey string
 }
 
-func (c *Client) httpClient() *http.Client {
-	return &http.Client{Timeout: 5 * time.Second}
+// func (c *Client) httpClient() *http.Client {
+// 	return &http.Client{Timeout: 5 * time.Second}
+// }
+
+func (c *Client) callService(path string, in, out interface{}) error {
+	b, err := json.Marshal(in)
+	if err != nil {
+		return err
+	}
+	cl := &http.Client{Timeout: 5 * time.Second}
+	r, err := cl.Post(serviceUrl+path, "application/json", bytes.NewReader(b))
+	if err != nil {
+		return err
+	}
+	defer r.Body.Close()
+	if r.StatusCode >= 400 {
+		return c.httpError(r)
+	}
+	if out != nil {
+		if err := json.NewDecoder(r.Body).Decode(out); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (c *Client) httpError(r *http.Response) error {
