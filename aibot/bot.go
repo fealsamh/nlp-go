@@ -58,6 +58,10 @@ func (m *Message) HasOption(o string) bool {
 }
 
 func (b *Bot) Validate() error {
+	if b.ID == "" {
+		return errors.New("no bot ID provided")
+	}
+
 	if b.Intents == nil {
 		return errors.New("no intents defined")
 	}
