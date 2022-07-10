@@ -27,7 +27,6 @@ func deployReader(cl *aibot.Client, r io.Reader) {
 	if err := bot.Validate(); err != nil {
 		exitWithError(err)
 	}
-	fmt.Println("the bot is valid")
 
 	dr, err := cl.Deploy(bot)
 	if err != nil {
