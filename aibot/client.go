@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -16,35 +17,50 @@ type Client struct {
 	SecretKey string
 }
 
-// func (c *Client) httpClient() *http.Client {
-// 	return &http.Client{Timeout: 5 * time.Second}
-// }
+func (c *Client) callServiceGet(path string, out interface{}) (int, error) {
+	return c.callService(http.MethodGet, path, nil, out)
+}
 
-func (c *Client) callService(path string, in, out interface{}) error {
-	b, err := json.Marshal(in)
-	if err != nil {
-		return err
+func (c *Client) callServicePost(path string, in, out interface{}) (int, error) {
+	return c.callService(http.MethodPost, path, in, out)
+}
+
+func (c *Client) callService(method, path string, in, out interface{}) (int, error) {
+	var rd io.Reader
+	if in != nil {
+		b, err := json.Marshal(in)
+		if err != nil {
+			return 0, err
+		}
+		rd = bytes.NewReader(b)
 	}
 	cl := &http.Client{Timeout: 5 * time.Second}
-	r, err := cl.Post(serviceUrl+path, "application/json", bytes.NewReader(b))
+	req, err := http.NewRequest(method, serviceUrl+path, rd)
 	if err != nil {
-		return err
+		return 0, err
+	}
+	if c.SecretKey != "" {
+		req.Header.Set("Authorization", "Bearer "+c.SecretKey)
+	}
+	r, err := cl.Do(req)
+	if err != nil {
+		return 0, err
 	}
 	defer r.Body.Close()
 	if r.StatusCode >= 400 {
-		return c.httpError(r)
+		return r.StatusCode, c.httpError(r)
 	}
 	if out != nil {
 		if err := json.NewDecoder(r.Body).Decode(out); err != nil {
-			return err
+			return r.StatusCode, err
 		}
 	}
-	return nil
+	return r.StatusCode, nil
 }
 
 func (c *Client) httpError(r *http.Response) error {
 	msg := "failed to read error message"
-	if b, err := io.ReadAll(r.Body); err == nil {
+	if b, err := ioutil.ReadAll(r.Body); err == nil {
 		msg = strings.TrimSpace(string(b))
 	} else {
 		msg += " (" + err.Error() + ")"

@@ -9,7 +9,7 @@ type signupRequest struct {
 }
 
 func (c *Client) Signup(username, fullname, email, password, orgName string) error {
-	if err := c.callService("/api/v1/signup", &signupRequest{
+	if _, err := c.callServicePost("/api/v1/signup", &signupRequest{
 		Username: username,
 		Fullname: fullname,
 		Email:    email,

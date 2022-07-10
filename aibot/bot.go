@@ -1,6 +1,8 @@
 package aibot
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"errors"
 	"fmt"
 )
@@ -12,6 +14,18 @@ type Bot struct {
 	Intents   map[string]*Intent `yaml:"intents" json:"intents,omitempty"`
 	States    map[string]*State  `yaml:"states" json:"states,omitempty"`
 	Synonyms  []string           `yaml:"synonyms" json:"synonyms,omitempty"`
+}
+
+func (bot *Bot) Value() (driver.Value, error) {
+	return json.Marshal(bot)
+}
+
+func (bot *Bot) Scan(data interface{}) error {
+	b, ok := data.([]byte)
+	if !ok {
+		return errors.New("failed to scan, expected []byte")
+	}
+	return json.Unmarshal(b, &bot)
 }
 
 type Intent struct {
@@ -44,6 +58,10 @@ func (m *Message) HasOption(o string) bool {
 }
 
 func (b *Bot) Validate() error {
+	if b.ID == "" {
+		return errors.New("no bot ID provided")
+	}
+
 	if b.Intents == nil {
 		return errors.New("no intents defined")
 	}

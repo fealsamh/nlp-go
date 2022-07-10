@@ -73,6 +73,16 @@ func main() {
 	switch cmd {
 	case "whoami":
 		whoami(cl)
+	case "get":
+		if flag.NArg() == 1 {
+			exitWithMessage("no bot ID provided")
+		}
+		getBot(cl, flag.Arg(1))
+	case "deploy":
+		if flag.NArg() == 1 {
+			exitWithMessage("no input file provided")
+		}
+		deploy(cl, flag.Arg(1))
 	default:
 		exitWithMessage("unknown command '%s'", cmd)
 	}
