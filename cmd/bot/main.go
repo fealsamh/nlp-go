@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -38,7 +38,7 @@ func getSecretKey() string {
 		exitWithError(err)
 	}
 	defer f.Close()
-	b, err := io.ReadAll(f)
+	b, err := ioutil.ReadAll(f)
 	if err != nil {
 		exitWithError(err)
 	}
