@@ -12,7 +12,7 @@ type User struct {
 
 func (c *Client) Whoami() (*User, error) {
 	var u *User
-	if err := c.callServiceGet("/api/v1/whoami", &u); err != nil {
+	if _, err := c.callServiceGet("/api/v1/whoami", &u); err != nil {
 		return nil, err
 	}
 	return u, nil

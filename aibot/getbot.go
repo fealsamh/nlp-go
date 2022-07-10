@@ -6,7 +6,7 @@ type GetBotResponse struct {
 
 func (c *Client) GetBot(id string) (*Bot, error) {
 	var r *GetBotResponse
-	if err := c.callServiceGet("/api/v1/bots/"+id, &r); err != nil {
+	if _, err := c.callServiceGet("/api/v1/bots/"+id, &r); err != nil {
 		return nil, err
 	}
 	return r.Bot, nil

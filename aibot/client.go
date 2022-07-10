@@ -16,58 +16,58 @@ type Client struct {
 	SecretKey string
 }
 
-func (c *Client) callServiceGet(path string, out interface{}) error {
+func (c *Client) callServiceGet(path string, out interface{}) (int, error) {
 	cl := &http.Client{Timeout: 5 * time.Second}
 	req, err := http.NewRequest(http.MethodGet, serviceUrl+path, nil)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	if c.SecretKey != "" {
 		req.Header.Set("Authorization", "Bearer "+c.SecretKey)
 	}
 	r, err := cl.Do(req)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer r.Body.Close()
 	if r.StatusCode >= 400 {
-		return c.httpError(r)
+		return r.StatusCode, c.httpError(r)
 	}
 	if out != nil {
 		if err := json.NewDecoder(r.Body).Decode(out); err != nil {
-			return err
+			return r.StatusCode, err
 		}
 	}
-	return nil
+	return r.StatusCode, nil
 }
 
-func (c *Client) callServicePost(path string, in, out interface{}) error {
+func (c *Client) callServicePost(path string, in, out interface{}) (int, error) {
 	b, err := json.Marshal(in)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	cl := &http.Client{Timeout: 5 * time.Second}
 	req, err := http.NewRequest(http.MethodPost, serviceUrl+path, bytes.NewReader(b))
 	if err != nil {
-		return err
+		return 0, err
 	}
 	if c.SecretKey != "" {
 		req.Header.Set("Authorization", "Bearer "+c.SecretKey)
 	}
 	r, err := cl.Do(req)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer r.Body.Close()
 	if r.StatusCode >= 400 {
-		return c.httpError(r)
+		return r.StatusCode, c.httpError(r)
 	}
 	if out != nil {
 		if err := json.NewDecoder(r.Body).Decode(out); err != nil {
-			return err
+			return r.StatusCode, err
 		}
 	}
-	return nil
+	return r.StatusCode, nil
 }
 
 func (c *Client) httpError(r *http.Response) error {

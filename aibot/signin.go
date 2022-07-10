@@ -12,7 +12,7 @@ type signinResponse struct {
 
 func (c *Client) Signin(username, password string) (string, string, error) {
 	var out *signinResponse
-	if err := c.callServicePost("/api/v1/signin", &signinRequest{
+	if _, err := c.callServicePost("/api/v1/signin", &signinRequest{
 		Username: username,
 		Password: password,
 	}, &out); err != nil {
