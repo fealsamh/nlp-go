@@ -81,10 +81,10 @@ func main() {
 		}
 		getBot(cl, flag.Arg(1))
 	case "intent":
-		if flag.NArg() <= 12 {
+		if flag.NArg() <= 2 {
 			exitWithMessage("a bot ID & an input sentence must be provided")
 		}
-		recogniseIntent(cl, flag.Arg(1))
+		recogniseIntent(cl, flag.Arg(1), flag.Arg(2))
 	case "deploy":
 		if flag.NArg() <= 1 {
 			exitWithMessage("no input file provided")
