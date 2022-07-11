@@ -61,7 +61,7 @@ func main() {
 	case "signup":
 		signup(cl)
 	case "check":
-		if flag.NArg() == 1 {
+		if flag.NArg() <= 1 {
 			exitWithMessage("no input file provided")
 		}
 		check(flag.Arg(1), false)
@@ -76,12 +76,17 @@ func main() {
 	case "whoami":
 		whoami(cl)
 	case "get":
-		if flag.NArg() == 1 {
+		if flag.NArg() <= 1 {
 			exitWithMessage("no bot ID provided")
 		}
 		getBot(cl, flag.Arg(1))
+	case "intent":
+		if flag.NArg() <= 2 {
+			exitWithMessage("a bot ID & an input sentence must be provided")
+		}
+		recogniseIntent(cl, flag.Arg(1), flag.Arg(2))
 	case "deploy":
-		if flag.NArg() == 1 {
+		if flag.NArg() <= 1 {
 			exitWithMessage("no input file provided")
 		}
 		deploy(cl, flag.Arg(1))
