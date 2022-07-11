@@ -10,16 +10,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func check(fp string) {
+func check(fp string, printJson bool) {
 	f, err := os.Open(fp)
 	if err != nil {
 		exitWithError(err)
 	}
 	defer f.Close()
-	checkReader(f)
+	checkReader(f, printJson)
 }
 
-func checkReader(r io.Reader) {
+func checkReader(r io.Reader, printJson bool) {
 	var bot *aibot.Bot
 	if err := yaml.NewDecoder(r).Decode(&bot); err != nil {
 		exitWithError(err)
@@ -30,9 +30,11 @@ func checkReader(r io.Reader) {
 	}
 	fmt.Println("the bot is valid")
 
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", " ")
-	if err := enc.Encode(bot); err != nil {
-		exitWithError(err)
+	if printJson {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", " ")
+		if err := enc.Encode(bot); err != nil {
+			exitWithError(err)
+		}
 	}
 }
