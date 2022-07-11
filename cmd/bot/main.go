@@ -46,12 +46,14 @@ func getSecretKey() string {
 }
 
 func main() {
+	var serviceUrl string
+	flag.StringVar(&serviceUrl, "s", aibot.DefaultServiceURL, "service URL")
 	flag.Parse()
 	if flag.NArg() == 0 {
 		exitWithMessage("no command provided")
 	}
 	cmd := flag.Arg(0)
-	cl := new(aibot.Client)
+	cl := &aibot.Client{ServiceURL: serviceUrl}
 	processed := true
 	switch cmd {
 	case "signin":
@@ -62,7 +64,7 @@ func main() {
 		if flag.NArg() == 1 {
 			exitWithMessage("no input file provided")
 		}
-		check(flag.Arg(1))
+		check(flag.Arg(1), false)
 	default:
 		processed = false
 	}

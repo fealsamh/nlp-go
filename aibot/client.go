@@ -11,10 +11,11 @@ import (
 	"time"
 )
 
-const serviceUrl = "https://ai-bot-srv.nw.r.appspot.com"
+const DefaultServiceURL = "https://ai-bot-srv.nw.r.appspot.com"
 
 type Client struct {
-	SecretKey string
+	ServiceURL string
+	SecretKey  string
 }
 
 func (c *Client) callServiceGet(path string, out interface{}) (int, error) {
@@ -35,7 +36,7 @@ func (c *Client) callService(method, path string, in, out interface{}) (int, err
 		rd = bytes.NewReader(b)
 	}
 	cl := &http.Client{Timeout: 5 * time.Second}
-	req, err := http.NewRequest(method, serviceUrl+path, rd)
+	req, err := http.NewRequest(method, c.ServiceURL+path, rd)
 	if err != nil {
 		return 0, err
 	}
