@@ -7,9 +7,11 @@ import (
 )
 
 func recogniseIntent(cl *aibot.Client, botId, text string) {
-	s, err := cl.RecogniseIntent(botId, text)
+	r, err := cl.RecogniseIntent(botId, text)
 	if err != nil {
 		exitWithError(err)
 	}
-	fmt.Println(s)
+	for _, is := range r {
+		fmt.Printf("%s: %f\n", is.IntentID, is.Similarity)
+	}
 }

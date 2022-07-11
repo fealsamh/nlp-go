@@ -1,23 +1,26 @@
 package aibot
 
-import "encoding/json"
-
 type RecogniseIntentRequest struct {
 	BotID string `json:"bot_id"`
 	Text  string `json:"text"`
 }
 
-type RecogniseIntentResponse struct {
-	Chart json.RawMessage `json:"chart"`
+type IntentSimilarity struct {
+	IntentID   string  `json:"intent_id"`
+	Similarity float64 `json:"similarity"`
 }
 
-func (c *Client) RecogniseIntent(botId, text string) (string, error) {
+type RecogniseIntentResponse struct {
+	Intents []IntentSimilarity `json:"intents"`
+}
+
+func (c *Client) RecogniseIntent(botId, text string) ([]IntentSimilarity, error) {
 	var r *RecogniseIntentResponse
 	if _, err := c.callServicePost("/api/v1/bots/intents", &RecogniseIntentRequest{
 		BotID: botId,
 		Text:  text,
 	}, &r); err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(r.Chart), nil
+	return r.Intents, nil
 }
