@@ -8,44 +8,33 @@ import (
 )
 
 type Bot struct {
-	ID        string             `yaml:"id" json:"id,omitempty"`
-	Name      string             `yaml:"name" json:"name,omitempty"`
-	InitState string             `yaml:"initState" json:"initState,omitempty"`
-	Intents   map[string]*Intent `yaml:"intents" json:"intents,omitempty"`
-	States    map[string]*State  `yaml:"states" json:"states,omitempty"`
-	Synonyms  []string           `yaml:"synonyms" json:"synonyms,omitempty"`
-}
-
-func (bot *Bot) Value() (driver.Value, error) {
-	return json.Marshal(bot)
-}
-
-func (bot *Bot) Scan(data interface{}) error {
-	b, ok := data.([]byte)
-	if !ok {
-		return errors.New("failed to scan, expected []byte")
-	}
-	return json.Unmarshal(b, &bot)
+	ID        string             `yaml:"id,omitempty" json:"id,omitempty"`
+	Name      string             `yaml:"name,omitempty" json:"name,omitempty"`
+	Language  string             `yaml:"language,omitempty" json:"language,omitempty"`
+	InitState string             `yaml:"initState,omitempty" json:"initState,omitempty"`
+	Intents   map[string]*Intent `yaml:"intents,omitempty" json:"intents,omitempty"`
+	States    map[string]*State  `yaml:"states,omitempty" json:"states,omitempty"`
+	Synonyms  []string           `yaml:"synonyms,omitempty" json:"synonyms,omitempty"`
 }
 
 type Intent struct {
-	Examples []string `yaml:"examples" json:"examples,omitempty"`
+	Examples []string `yaml:"examples,omitempty" json:"examples,omitempty"`
 }
 
 type State struct {
-	Message *Message `yaml:"message" json:"message,omitempty"`
-	Action  string   `yaml:"action" json:"action,omitempty"`
-	Next    []*Next  `yaml:"next" json:"next,omitempty"`
+	Message *Message `yaml:"message,omitempty" json:"message,omitempty"`
+	Action  string   `yaml:"action,omitempty" json:"action,omitempty"`
+	Next    []*Next  `yaml:"next,omitempty" json:"next,omitempty"`
 }
 
 type Message struct {
-	Text    string   `yaml:"text" json:"text,omitempty"`
-	Options []string `yaml:"options" json:"options,omitempty"`
+	Text    string   `yaml:"text,omitempty" json:"text,omitempty"`
+	Options []string `yaml:"options,omitempty" json:"options,omitempty"`
 }
 
 type Next struct {
-	State  string `yaml:"state" json:"state,omitempty"`
-	Option string `yaml:"option" json:"option,omitempty"`
+	State  string `yaml:"state,omitempty" json:"state,omitempty"`
+	Option string `yaml:"option,omitempty" json:"option,omitempty"`
 }
 
 func (m *Message) HasOption(o string) bool {
@@ -60,6 +49,10 @@ func (m *Message) HasOption(o string) bool {
 func (b *Bot) Validate() error {
 	if b.ID == "" {
 		return errors.New("no bot ID provided")
+	}
+
+	if b.Language == "" {
+		return errors.New("no bot language provided")
 	}
 
 	if b.Intents == nil {
@@ -127,4 +120,16 @@ func (s *State) Validate(sid string, b *Bot) error {
 		}
 	}
 	return nil
+}
+
+func (bot *Bot) Value() (driver.Value, error) {
+	return json.Marshal(bot)
+}
+
+func (bot *Bot) Scan(data interface{}) error {
+	b, ok := data.([]byte)
+	if !ok {
+		return errors.New("failed to scan, expected []byte")
+	}
+	return json.Unmarshal(b, &bot)
 }

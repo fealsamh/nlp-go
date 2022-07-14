@@ -46,12 +46,14 @@ func getSecretKey() string {
 }
 
 func main() {
+	var serviceUrl string
+	flag.StringVar(&serviceUrl, "s", aibot.DefaultServiceURL, "service URL")
 	flag.Parse()
 	if flag.NArg() == 0 {
 		exitWithMessage("no command provided")
 	}
 	cmd := flag.Arg(0)
-	cl := new(aibot.Client)
+	cl := &aibot.Client{ServiceURL: serviceUrl}
 	processed := true
 	switch cmd {
 	case "signin":
@@ -59,10 +61,10 @@ func main() {
 	case "signup":
 		signup(cl)
 	case "check":
-		if flag.NArg() == 1 {
+		if flag.NArg() <= 1 {
 			exitWithMessage("no input file provided")
 		}
-		check(flag.Arg(1))
+		check(flag.Arg(1), false)
 	default:
 		processed = false
 	}
@@ -76,12 +78,17 @@ func main() {
 	case "list":
 		listBots(cl)
 	case "get":
-		if flag.NArg() == 1 {
+		if flag.NArg() <= 1 {
 			exitWithMessage("no bot ID provided")
 		}
 		getBot(cl, flag.Arg(1))
+	case "intent":
+		if flag.NArg() <= 2 {
+			exitWithMessage("a bot ID & an input sentence must be provided")
+		}
+		recogniseIntent(cl, flag.Arg(1), flag.Arg(2))
 	case "deploy":
-		if flag.NArg() == 1 {
+		if flag.NArg() <= 1 {
 			exitWithMessage("no input file provided")
 		}
 		deploy(cl, flag.Arg(1))
