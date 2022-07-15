@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/fealsamh/nlp-go/aibot"
@@ -46,15 +47,27 @@ func getSecretKey() string {
 }
 
 func main() {
-	var serviceUrl string
+	var serviceUrl, regExp string
 	flag.StringVar(&serviceUrl, "s", aibot.DefaultServiceURL, "service URL")
+	flag.StringVar(&regExp, "r", "", "regular expression")
 	flag.Parse()
+
 	if flag.NArg() == 0 {
 		exitWithMessage("no command provided")
 	}
 	cmd := flag.Arg(0)
 	cl := &aibot.Client{ServiceURL: serviceUrl}
 	processed := true
+
+	var re *regexp.Regexp
+	if regExp != "" {
+		var err error
+		re, err = regexp.Compile(regExp)
+		if err != nil {
+			exitWithError(err)
+		}
+	}
+
 	switch cmd {
 	case "signin":
 		signin(cl)
@@ -71,12 +84,13 @@ func main() {
 	if processed {
 		return
 	}
+
 	cl.SecretKey = getSecretKey()
 	switch cmd {
 	case "whoami":
 		whoami(cl)
 	case "list":
-		listBots(cl)
+		listBots(cl, re)
 	case "get":
 		if flag.NArg() <= 1 {
 			exitWithMessage("no bot ID provided")
