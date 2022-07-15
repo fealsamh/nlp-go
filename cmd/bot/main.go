@@ -75,6 +75,8 @@ func main() {
 	switch cmd {
 	case "whoami":
 		whoami(cl)
+	case "list":
+		listBots(cl)
 	case "get":
 		if flag.NArg() <= 1 {
 			exitWithMessage("no bot ID provided")
