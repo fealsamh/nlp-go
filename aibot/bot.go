@@ -14,7 +14,12 @@ type Bot struct {
 	InitState string             `yaml:"initState,omitempty" json:"initState,omitempty"`
 	Intents   map[string]*Intent `yaml:"intents,omitempty" json:"intents,omitempty"`
 	States    map[string]*State  `yaml:"states,omitempty" json:"states,omitempty"`
+	Entities  map[string]*Entity `yaml:"entities,omitempty" json:"entities,omitempty"`
 	Synonyms  []string           `yaml:"synonyms,omitempty" json:"synonyms,omitempty"`
+}
+
+type Entity struct {
+	Values []string `yaml:"values,omitempty" json:"values,omitempty"`
 }
 
 type Intent struct {
@@ -57,6 +62,12 @@ func (b *Bot) Validate() error {
 
 	if b.Intents == nil {
 		return errors.New("no intents defined")
+	}
+
+	for k, e := range b.Entities {
+		if e == nil || len(e.Values) == 0 {
+			return fmt.Errorf("no values for entity '%s'", k)
+		}
 	}
 
 	for iid, i := range b.Intents {
