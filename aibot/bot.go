@@ -65,7 +65,7 @@ func (b *Bot) Validate() error {
 	}
 
 	for k, e := range b.Entities {
-		if len(e.Values) == 0 {
+		if e == nil || len(e.Values) == 0 {
 			return fmt.Errorf("no values for entity '%s'", k)
 		}
 	}
