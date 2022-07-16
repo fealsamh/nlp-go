@@ -2,26 +2,25 @@ package main
 
 import (
 	"fmt"
-	"strings"
-	"text/scanner"
 
 	"github.com/fealsamh/nlp-go/aibot"
+	"github.com/fealsamh/nlp-go/aibot/ast"
 )
 
-func ast(cl *aibot.Client) {
-	var s scanner.Scanner
-	s.Init(strings.NewReader(`
-	// comment
-	id = "abcd" | id = 1234
-	`))
-	var err error
-	s.Error = func(s *scanner.Scanner, msg string) {
-		err = fmt.Errorf("%s (%s)", msg, s.Position)
+func astCmd(cl *aibot.Client) {
+	tokens, err := ast.Tokenise(`option = "abcd"`)
+	if err != nil {
+		exitWithError(err)
 	}
-	for tok := s.Scan(); tok != scanner.EOF; tok = s.Scan() {
-		if err != nil {
-			exitWithError(err)
-		}
-		fmt.Printf("%s '%s' '%s'\n", s.Position, scanner.TokenString(tok), s.TokenText())
+	expr, err := ast.ParseExpr(tokens)
+	if err != nil {
+		exitWithError(err)
 	}
+	v, err := expr.Eval(map[string]ast.Value{
+		"option": &ast.String{Value: "abcd"},
+	})
+	if err != nil {
+		exitWithError(err)
+	}
+	fmt.Printf("%T '%s' %T %v\n", expr, expr, v, v.Interface())
 }

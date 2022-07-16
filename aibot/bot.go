@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
+	"github.com/fealsamh/nlp-go/aibot/ast"
 )
 
 type Bot struct {
@@ -38,8 +40,9 @@ type Message struct {
 }
 
 type Next struct {
-	State  string `yaml:"state,omitempty" json:"state,omitempty"`
-	Option string `yaml:"option,omitempty" json:"option,omitempty"`
+	State  string         `yaml:"state,omitempty" json:"state,omitempty"`
+	If     string         `yaml:"if,omitempty" json:"if,omitempty"`
+	IfExpr ast.Expression `yaml:"-" json:"if_expr,omitempty"`
 }
 
 func (m *Message) HasOption(o string) bool {
@@ -123,8 +126,16 @@ func (s *State) Validate(sid string, b *Bot) error {
 		return fmt.Errorf("unknown action '%s' in state '%s'", s.Action, sid)
 	}
 	for _, n := range s.Next {
-		if n.Option != "" && !s.Message.HasOption(n.Option) {
-			return fmt.Errorf("option '%s' not defined in state '%s'", n.Option, sid)
+		if n.If != "" {
+			tokens, err := ast.Tokenise(n.If)
+			if err != nil {
+				return fmt.Errorf("parsing '%s': %w", n.If, err)
+			}
+			expr, err := ast.ParseExpr(tokens)
+			if err != nil {
+				return fmt.Errorf("parsing '%s': %w", n.If, err)
+			}
+			n.IfExpr = expr
 		}
 		if _, ok := b.States[n.State]; !ok {
 			return fmt.Errorf("next state '%s' not defined (used in state '%s')", n.State, sid)

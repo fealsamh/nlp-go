@@ -90,7 +90,7 @@ func main() {
 	case "whoami":
 		whoami(cl)
 	case "ast":
-		ast(cl)
+		astCmd(cl)
 	case "list":
 		listBots(cl, re)
 	case "get":
