@@ -16,9 +16,9 @@ func astCmd(cl *aibot.Client) {
 	if err != nil {
 		exitWithError(err)
 	}
-	v, err := expr.Eval(map[string]ast.Value{
-		"option": &ast.String{Value: "abcd"},
-	})
+	ctx := new(ast.EvalContext)
+	ctx.Set("option", &ast.String{Value: "abcd"})
+	v, err := expr.Eval(ctx)
 	if err != nil {
 		exitWithError(err)
 	}

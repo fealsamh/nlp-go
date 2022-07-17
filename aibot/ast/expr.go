@@ -6,9 +6,25 @@ import (
 	"text/scanner"
 )
 
+type EvalContext struct {
+	val map[string]Value
+}
+
+func (c *EvalContext) Set(k string, v Value) {
+	if c.val == nil {
+		c.val = make(map[string]Value)
+	}
+	c.val[k] = v
+}
+
+func (c *EvalContext) Get(k string) (Value, bool) {
+	v, ok := c.val[k]
+	return v, ok
+}
+
 type Expression interface {
 	fmt.Stringer
-	Eval(map[string]Value) (Value, error)
+	Eval(*EvalContext) (Value, error)
 	Position() scanner.Position
 }
 
@@ -18,12 +34,12 @@ type EqExpr struct {
 	pos scanner.Position
 }
 
-func (e *EqExpr) Eval(val map[string]Value) (Value, error) {
-	v1, err := e.Lhs.Eval(val)
+func (e *EqExpr) Eval(ctx *EvalContext) (Value, error) {
+	v1, err := e.Lhs.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
-	v2, err := e.Rhs.Eval(val)
+	v2, err := e.Rhs.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -40,12 +56,12 @@ type IneqExpr struct {
 	pos scanner.Position
 }
 
-func (e *IneqExpr) Eval(val map[string]Value) (Value, error) {
-	v1, err := e.Lhs.Eval(val)
+func (e *IneqExpr) Eval(ctx *EvalContext) (Value, error) {
+	v1, err := e.Lhs.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
-	v2, err := e.Rhs.Eval(val)
+	v2, err := e.Rhs.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +77,8 @@ type IdentExpr struct {
 	pos  scanner.Position
 }
 
-func (e *IdentExpr) Eval(val map[string]Value) (Value, error) {
-	v, ok := val[e.Name]
+func (e *IdentExpr) Eval(ctx *EvalContext) (Value, error) {
+	v, ok := ctx.Get(e.Name)
 	if !ok {
 		return nil, fmt.Errorf("unknown indentifier '%s' (%s)", e.Name, e.pos)
 	}
@@ -78,7 +94,7 @@ type StringExpr struct {
 	pos   scanner.Position
 }
 
-func (e *StringExpr) Eval(val map[string]Value) (Value, error) {
+func (e *StringExpr) Eval(ctx *EvalContext) (Value, error) {
 	return &String{Value: e.Value}, nil
 }
 
