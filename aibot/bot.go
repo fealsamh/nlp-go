@@ -42,7 +42,7 @@ type Message struct {
 type Next struct {
 	State  string         `yaml:"state,omitempty" json:"state,omitempty"`
 	If     string         `yaml:"if,omitempty" json:"if,omitempty"`
-	IfExpr ast.Expression `yaml:"-" json:"if_expr,omitempty"`
+	IfExpr ast.Expression `yaml:"-" json:"-"`
 }
 
 func (m *Message) HasOption(o string) bool {
