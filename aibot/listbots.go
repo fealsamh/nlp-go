@@ -1,11 +1,11 @@
 package aibot
 
-type ListBotsResponse struct {
+type listBotsResponse struct {
 	BotIDs []string `json:"bot_ids"`
 }
 
 func (c *Client) ListBots() ([]string, error) {
-	var r *ListBotsResponse
+	var r *listBotsResponse
 	if _, err := c.callServiceGet("/api/v1/bots", &r); err != nil {
 		return nil, err
 	}
