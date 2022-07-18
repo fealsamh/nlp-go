@@ -13,7 +13,7 @@ type Bot struct {
 	ID        string             `yaml:"id,omitempty" json:"id,omitempty"`
 	Name      string             `yaml:"name,omitempty" json:"name,omitempty"`
 	Language  string             `yaml:"language,omitempty" json:"language,omitempty"`
-	InitState string             `yaml:"initState,omitempty" json:"initState,omitempty"`
+	InitState string             `yaml:"init_state,omitempty" json:"init_state,omitempty"`
 	Intents   map[string]*Intent `yaml:"intents,omitempty" json:"intents,omitempty"`
 	States    map[string]*State  `yaml:"states,omitempty" json:"states,omitempty"`
 	Entities  map[string]*Entity `yaml:"entities,omitempty" json:"entities,omitempty"`
