@@ -111,10 +111,10 @@ func getSortedMapKeys(m interface{}) interface{} {
 		}
 		keys = reflect.Append(keys, v)
 	}
-	if s, ok := keys.Interface().([]string); ok {
+	switch s := keys.Interface().(type) {
+	case []string:
 		sort.Strings(s)
-	}
-	if s, ok := keys.Interface().([]int); ok {
+	case []int:
 		sort.Ints(s)
 	}
 	return keys.Interface()
