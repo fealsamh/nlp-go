@@ -78,8 +78,8 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 			}
 		}
 	case reflect.Map:
-		keys1 := getSortedMapKeys(v1.Interface())
-		keys2 := getSortedMapKeys(v2.Interface())
+		keys1 := GetSortedMapKeys(v1.Interface())
+		keys2 := GetSortedMapKeys(v2.Interface())
 		if !reflect.DeepEqual(keys1, keys2) {
 			return false, &DeepInequalityReason{Text: "different map keys", Args: []interface{}{v1, v2}}
 		}
@@ -98,7 +98,7 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 	return true, nil
 }
 
-func getSortedMapKeys(m interface{}) interface{} {
+func GetSortedMapKeys(m interface{}) interface{} {
 	v := reflect.ValueOf(m)
 	if v.Kind() != reflect.Map {
 		panic("expected map")
@@ -116,6 +116,8 @@ func getSortedMapKeys(m interface{}) interface{} {
 		sort.Strings(s)
 	case []int:
 		sort.Ints(s)
+	case []float64:
+		sort.Float64s(s)
 	}
 	return keys.Interface()
 }
