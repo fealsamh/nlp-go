@@ -18,5 +18,8 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
+      - uses: golangci/golangci-lint-action@v2
+        with:
+          args: --timeout 5m
       - run: |
           go test -v ./...
