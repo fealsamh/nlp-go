@@ -37,6 +37,12 @@ func parseOneOf(ctx *parsingCtx, l ...string) (string, error) {
 	})
 	t := ctx.token(0)
 	for _, s := range l {
+		if t.IsIdent() && t.Text == s {
+			if err := ctx.advance(1); err != nil {
+				return "", err
+			}
+			return s, nil
+		}
 		m, err := parseSym(ctx, s)
 		if err != nil {
 			return "", err
