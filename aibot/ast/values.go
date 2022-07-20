@@ -1,10 +1,13 @@
 package ast
 
 import (
+	"fmt"
 	"reflect"
+	"strconv"
 )
 
 type Value interface {
+	fmt.Stringer
 	Kind() reflect.Kind
 	Interface() interface{}
 	Equals(Value) bool
@@ -15,6 +18,8 @@ type String struct {
 }
 
 func (v *String) Kind() reflect.Kind { return reflect.String }
+
+func (v *String) String() string { return strconv.Quote(v.Value) }
 
 func (v *String) Interface() interface{} { return v.Value }
 
@@ -30,6 +35,14 @@ type Bool struct {
 }
 
 func (v *Bool) Kind() reflect.Kind { return reflect.Bool }
+
+func (v *Bool) String() string {
+	if v.Value {
+		return "true"
+	} else {
+		return "false"
+	}
+}
 
 func (v *Bool) Interface() interface{} { return v.Value }
 

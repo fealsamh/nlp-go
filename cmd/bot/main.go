@@ -89,8 +89,6 @@ func main() {
 	switch cmd {
 	case "whoami":
 		whoami(cl)
-	case "ast":
-		astCmd(cl)
 	case "list":
 		listBots(cl, re)
 	case "get":
