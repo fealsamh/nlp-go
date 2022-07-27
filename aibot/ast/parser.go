@@ -51,8 +51,16 @@ func parseOneOf(ctx *parsingCtx, l ...string) (string, error) {
 			return s, nil
 		}
 	}
-	return "", fmt.Errorf("expected one of %s (%s)", strings.Join(l, ", "), t.Position)
+	return "", &errorNotFound{
+		      msg: fmt.Sprintf("expected one of %s (%s)", strings.Join(l, ", "), t.Position),
+	}
 }
+
+type errorNotFound struct {
+  msg string
+}
+
+func (e *errorNotFound) Error() string { return e.msg }
 
 func parseSym(ctx *parsingCtx, s string) (bool, error) {
 	for i := 0; i < len(s); i++ {
