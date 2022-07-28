@@ -101,3 +101,29 @@ func (e *StringExpr) Eval(ctx *EvalContext) (Value, error) {
 func (e *StringExpr) String() string { return strconv.Quote(e.Value) }
 
 func (e *StringExpr) Position() scanner.Position { return e.pos }
+
+type IntExpr struct {
+	Value int
+	pos   scanner.Position
+}
+
+func (e *IntExpr) Eval(ctx *EvalContext) (Value, error) {
+	return &Int{Value: e.Value}, nil
+}
+
+func (e *IntExpr) String() string { return strconv.Itoa(e.Value) }
+
+func (e *IntExpr) Position() scanner.Position { return e.pos }
+
+type FloatExpr struct {
+	Value float64
+	pos   scanner.Position
+}
+
+func (e *FloatExpr) Eval(ctx *EvalContext) (Value, error) {
+	return &Float{Value: e.Value}, nil
+}
+
+func (e *FloatExpr) String() string { return fmt.Sprintf("%f", e.Value) }
+
+func (e *FloatExpr) Position() scanner.Position { return e.pos }

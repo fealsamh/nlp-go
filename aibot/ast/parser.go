@@ -56,17 +56,11 @@ func parseOneOf(ctx *parsingCtx, l ...string) (string, error) {
 	}
 }
 
-type errorNotFound struct {
-	msg string
-}
-
-func (e *errorNotFound) Error() string { return e.msg }
-
 func parseSym(ctx *parsingCtx, s string) (bool, error) {
 	for i := 0; i < len(s); i++ {
 		t := ctx.token(i)
 		if t.IsEOF() {
-			return false, errors.New("unexpected end of file")
+			return false, &errorEOF{}
 		}
 		if !t.IsSymbol() || t.Text != s[i:i+1] {
 			return false, nil
@@ -77,3 +71,28 @@ func parseSym(ctx *parsingCtx, s string) (bool, error) {
 	}
 	return true, nil
 }
+
+type errorKind int
+
+const (
+	errorKindNotFound errorKind = iota
+	errorKindEOF
+)
+
+type ParseError interface {
+	Kind() errorKind
+}
+
+type errorNotFound struct {
+	msg string
+}
+
+func (e *errorNotFound) Error() string { return e.msg }
+
+func (e *errorNotFound) Kind() errorKind { return errorKindNotFound }
+
+type errorEOF struct{}
+
+func (e *errorEOF) Error() string { return "unexpected end of file" }
+
+func (e *errorEOF) Kind() errorKind { return errorKindEOF }

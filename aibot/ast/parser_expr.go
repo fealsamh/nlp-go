@@ -20,7 +20,7 @@ func parseComp(ctx *parsingCtx) (Expression, error) {
 
 	s, err := parseOneOf(ctx, "=", "/=")
 	if err != nil {
-		if _, ok := err.(*errorNotFound); ok {
+		if err, ok := err.(ParseError); ok && (err.Kind() == errorKindNotFound || err.Kind() == errorKindEOF) {
 			return e1, nil
 		}
 		return nil, err
@@ -54,6 +54,16 @@ func parseAtom(ctx *parsingCtx) (Expression, error) {
 			return nil, err
 		}
 		return &StringExpr{Value: t.Value().(string), pos: t.Position}, nil
+	case t.IsInt():
+		if err := ctx.advance(1); err != nil {
+			return nil, err
+		}
+		return &IntExpr{Value: t.Value().(int), pos: t.Position}, nil
+	case t.IsFloat():
+		if err := ctx.advance(1); err != nil {
+			return nil, err
+		}
+		return &FloatExpr{Value: t.Value().(float64), pos: t.Position}, nil
 	default:
 		return nil, fmt.Errorf("unexpected token (%s)", t.Position)
 	}
