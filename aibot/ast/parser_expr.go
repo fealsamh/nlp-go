@@ -21,7 +21,7 @@ func parseComp(ctx *parsingCtx) (Expression, error) {
 	s, err := parseOneOf(ctx, "=", "/=")
 	if err != nil {
 		if _, ok := err.(*errorNotFound); ok {
-                  return e1, nil
+			return e1, nil
 		}
 		return nil, err
 	}

@@ -52,12 +52,12 @@ func parseOneOf(ctx *parsingCtx, l ...string) (string, error) {
 		}
 	}
 	return "", &errorNotFound{
-		      msg: fmt.Sprintf("expected one of %s (%s)", strings.Join(l, ", "), t.Position),
+		msg: fmt.Sprintf("expected one of %s (%s)", strings.Join(l, ", "), t.Position),
 	}
 }
 
 type errorNotFound struct {
-  msg string
+	msg string
 }
 
 func (e *errorNotFound) Error() string { return e.msg }
