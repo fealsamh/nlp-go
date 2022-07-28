@@ -13,6 +13,13 @@ type Value interface {
 	Equals(Value) bool
 }
 
+func Must(v Value, err error) Value {
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
 func NewValue(x interface{}) (Value, error) {
 	switch x := x.(type) {
 	case bool:
@@ -21,6 +28,8 @@ func NewValue(x interface{}) (Value, error) {
 		return &String{Value: x}, nil
 	case int:
 		return &Int{Value: x}, nil
+	case float64:
+		return &Float{Value: x}, nil
 	}
 	return nil, fmt.Errorf("failed to created a value of type '%T'", x)
 }
