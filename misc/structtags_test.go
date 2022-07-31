@@ -18,8 +18,15 @@ type StructJson2 struct {
 }
 
 type StructXML1 struct {
-	XMLName xml.Name `xml:"struct_xml1"`
-	Name    string   `xml:"name"`
+	XMLName     xml.Name `xml:"http://www.w3.org/2005/Atom struct_xml1"`
+	Name        string   `xml:"name"`
+	Description string
+}
+
+type StructXML2 struct {
+	XMLName     xml.Name `xml:"struct_xml2"`
+	Name        string   `xml:"name"`
+	Description string
 }
 
 func TestCheckJSONTags(t *testing.T) {
@@ -36,6 +43,9 @@ func TestCheckJSONTags(t *testing.T) {
 func TestCheckXMLTags(t *testing.T) {
 	assert := assert.New(t)
 
-	err := CheckXMLTags(reflect.TypeOf((*StructXML1)(nil)), "id")
+	err := CheckXMLTags(reflect.TypeOf((*StructXML1)(nil)))
+	assert.Nil(err)
+
+	err = CheckXMLTags(reflect.TypeOf((*StructXML2)(nil)))
 	assert.Nil(err)
 }
