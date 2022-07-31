@@ -14,12 +14,15 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 		f := typ.Field(i)
 		tag := f.Tag.Get(tagAttr)
 		if tag == "" {
-			return fmt.Errorf("nil '%s' struct tag for %s.%s", tagAttr, typ, f.Name)
+			continue
+			// return fmt.Errorf("nil '%s' struct tag for %s.%s", tagAttr, typ, f.Name)
 		}
 		if !f.Anonymous {
 			tagName := strings.Split(tag, ",")[0]
 			if f.Name == "XMLName" {
 				typName := SnakecasedFromCamelcased(typ.Name())
+				comps := strings.Split(tagName, " ")
+				tagName = comps[len(comps)-1]
 				if strings.ToLower(typName) != tagName {
 					return fmt.Errorf("bad '%s' struct tag for %s.XMLName (%s != %s)", tagAttr, typ, typName, tagName)
 				}
