@@ -18,7 +18,12 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 		}
 		if !f.Anonymous {
 			tagName := strings.Split(tag, ",")[0]
-			if tagName != "-" {
+			if f.Name == "XMLName" {
+				typName := SnakecasedFromCamelcased(typ.Name())
+				if strings.ToLower(typName) != tagName {
+					return fmt.Errorf("bad '%s' struct tag for %s.XMLName (%s != %s)", tagAttr, typ, typName, tagName)
+				}
+			} else if tagName != "-" {
 				snakeField := SnakecasedFromCamelcased(f.Name, terms...)
 				if snakeField != tagName {
 					return fmt.Errorf("bad '%s' struct tag for %s.%s (%s != %s)", tagAttr, typ, f.Name, snakeField, tagName)
@@ -31,4 +36,8 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 
 func CheckJSONTags(typ reflect.Type, terms ...string) error {
 	return CheckStructTags("json", typ, terms...)
+}
+
+func CheckXMLTags(typ reflect.Type, terms ...string) error {
+	return CheckStructTags("xml", typ, terms...)
 }
