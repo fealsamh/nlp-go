@@ -21,3 +21,31 @@ func Contains(slice, el interface{}) bool {
 
 	return false
 }
+
+func Equal(slice1, slice2 interface{}) bool {
+	slcval1 := reflect.ValueOf(slice1)
+	if slcval1.Kind() != reflect.Slice {
+		panic("slices.Equal: first argument not a slice")
+	}
+
+	slcval2 := reflect.ValueOf(slice2)
+	if slcval2.Kind() != reflect.Slice {
+		panic("slices.Equal: second argument not a slice")
+	}
+
+	if slcval1.Type().Elem() != slcval2.Type().Elem() {
+		panic("slices.Equal: arguments' element types do not match")
+	}
+
+	if slcval1.Len() != slcval2.Len() {
+		return false
+	}
+
+	for i := 0; i < slcval1.Len(); i++ {
+		if !reflect.DeepEqual(slcval1.Index(i).Interface(), slcval2.Index(i).Interface()) {
+			return false
+		}
+	}
+
+	return true
+}
