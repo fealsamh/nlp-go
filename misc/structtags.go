@@ -19,8 +19,7 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 		}
 		tag := f.Tag.Get(tagAttr)
 		if tag == "" {
-			continue
-			// return fmt.Errorf("nil '%s' struct tag for %s.%s", tagAttr, typ, f.Name)
+			return fmt.Errorf("nil '%s' struct tag for %s.%s", tagAttr, typ, f.Name)
 		}
 		if !f.Anonymous {
 			tagName := strings.Split(tag, ",")[0]

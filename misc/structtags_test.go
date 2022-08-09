@@ -22,13 +22,13 @@ type StructXML1 struct {
 	XMLName     xml.Name `xml:"http://www.w3.org/2005/Atom struct_xml1"`
 	Name        string   `xml:"name"`
 	NonMatching string   `xml:"nonmatching" check:"no"`
-	Description string
+	Description string   `check:"no"`
 }
 
 type StructXML2 struct {
 	XMLName     xml.Name `xml:"struct_xml2"`
 	Name        string   `xml:"name"`
-	Description string
+	Description string   `check:"no"`
 }
 
 func TestCheckJSONTags(t *testing.T) {
