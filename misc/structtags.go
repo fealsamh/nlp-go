@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+
+	"github.com/fealsamh/nlp-go/utils/slices"
 )
 
 func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
@@ -12,6 +14,9 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 	}
 	for i := 0; i < typ.NumField(); i++ {
 		f := typ.Field(i)
+		if slices.Contains([]string{"0", "no", "false"}, f.Tag.Get("check")) {
+			continue
+		}
 		tag := f.Tag.Get(tagAttr)
 		if tag == "" {
 			continue
