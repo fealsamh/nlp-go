@@ -14,12 +14,14 @@ type StructJson1 struct {
 }
 
 type StructJson2 struct {
-	SomeField int `json:"somefield"`
+	SomeField   int    `json:"somefield"`
+	NonMatching string `json:"nonmatching" check:"no"`
 }
 
 type StructXML1 struct {
 	XMLName     xml.Name `xml:"http://www.w3.org/2005/Atom struct_xml1"`
 	Name        string   `xml:"name"`
+	NonMatching string   `xml:"nonmatching" check:"no"`
 	Description string
 }
 
