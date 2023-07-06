@@ -79,6 +79,7 @@ const (
 	errorKindEOF
 )
 
+// ParseError ...
 type ParseError interface {
 	Kind() errorKind
 }

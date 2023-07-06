@@ -14,6 +14,7 @@ type Value interface {
 	Equals(Value) bool
 }
 
+// Must ...
 func Must(v Value, err error) Value {
 	if err != nil {
 		panic(err)
@@ -21,6 +22,7 @@ func Must(v Value, err error) Value {
 	return v
 }
 
+// NewValue ...
 func NewValue(x interface{}) (Value, error) {
 	switch x := x.(type) {
 	case bool:
@@ -35,36 +37,46 @@ func NewValue(x interface{}) (Value, error) {
 	return nil, fmt.Errorf("failed to created a value of type '%T'", x)
 }
 
+// Int ...
 type Int struct {
 	Value int
 }
 
+// Kind ...
 func (v *Int) Kind() reflect.Kind { return reflect.Int }
 
+// String ...
 func (v *Int) String() string { return strconv.Itoa(v.Value) }
 
+// Interface ...
 func (v *Int) Interface() interface{} { return v.Value }
 
-func (v1 *Int) Equals(v2 Value) bool {
+// Equals ...
+func (v *Int) Equals(v2 Value) bool {
 	if v2, ok := v2.(*Int); ok {
-		return v1.Value == v2.Value
+		return v.Value == v2.Value
 	}
 	return false
 }
 
+// Float ...
 type Float struct {
 	Value float64
 }
 
+// Kind ...
 func (v *Float) Kind() reflect.Kind { return reflect.Float64 }
 
+// String ...
 func (v *Float) String() string { return fmt.Sprintf("%f", v.Value) }
 
+// Interface ...
 func (v *Float) Interface() interface{} { return v.Value }
 
-func (v1 *Float) Equals(v2 Value) bool {
+// Equals ...
+func (v *Float) Equals(v2 Value) bool {
 	if v2, ok := v2.(*Float); ok {
-		return v1.Value == v2.Value
+		return v.Value == v2.Value
 	}
 	return false
 }
