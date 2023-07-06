@@ -117,3 +117,37 @@ func (e *StringExpr) String() string { return strconv.Quote(e.Value) }
 
 // Position ...
 func (e *StringExpr) Position() scanner.Position { return e.pos }
+
+// IntExpr ...
+type IntExpr struct {
+	Value int
+	pos   scanner.Position
+}
+
+// Eval ...
+func (e *IntExpr) Eval(ctx *EvalContext) (Value, error) {
+	return &Int{Value: e.Value}, nil
+}
+
+// String ...
+func (e *IntExpr) String() string { return strconv.Itoa(e.Value) }
+
+// Position ...
+func (e *IntExpr) Position() scanner.Position { return e.pos }
+
+// FloatExpr ...
+type FloatExpr struct {
+	Value float64
+	pos   scanner.Position
+}
+
+// Eval ...
+func (e *FloatExpr) Eval(ctx *EvalContext) (Value, error) {
+	return &Float{Value: e.Value}, nil
+}
+
+// String ...
+func (e *FloatExpr) String() string { return fmt.Sprintf("%f", e.Value) }
+
+// Position ...
+func (e *FloatExpr) Position() scanner.Position { return e.pos }
