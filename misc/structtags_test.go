@@ -8,12 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type StructJson1 struct {
+type StructJSON1 struct {
 	SomeInterestingUUIDUsedInTheCloud string   `json:"some_interesting_uuid_used_in_the_cloud"`
 	SomeIDs                           []string `json:"some_ids"`
 }
 
-type StructJson2 struct {
+type StructJSON2 struct {
 	SomeField   int    `json:"somefield"`
 	NonMatching string `json:"nonmatching" check:"no"`
 }
@@ -34,12 +34,12 @@ type StructXML2 struct {
 func TestCheckJSONTags(t *testing.T) {
 	assert := assert.New(t)
 
-	err := CheckJSONTags(reflect.TypeOf((*StructJson1)(nil)), "id")
+	err := CheckJSONTags(reflect.TypeOf((*StructJSON1)(nil)), "id")
 	assert.Nil(err)
 
-	err = CheckJSONTags(reflect.TypeOf((*StructJson2)(nil)), "id")
+	err = CheckJSONTags(reflect.TypeOf((*StructJSON2)(nil)), "id")
 	assert.NotNil(err)
-	assert.Equal(err.Error(), "bad 'json' struct tag for misc.StructJson2.SomeField (some_field != somefield)")
+	assert.Equal(err.Error(), "bad 'json' struct tag for misc.StructJSON2.SomeField (some_field != somefield)")
 }
 
 func TestCheckXMLTags(t *testing.T) {

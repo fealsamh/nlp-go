@@ -11,8 +11,10 @@ import (
 	"time"
 )
 
+// DefaultServiceURL ...
 const DefaultServiceURL = "https://ai-bot-srv.nw.r.appspot.com"
 
+// Client ...
 type Client struct {
 	ServiceURL string
 	SecretKey  string

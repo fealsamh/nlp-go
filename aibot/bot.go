@@ -9,6 +9,7 @@ import (
 	"github.com/fealsamh/nlp-go/aibot/ast"
 )
 
+// Bot ...
 type Bot struct {
 	ID        string             `yaml:"id,omitempty" json:"id,omitempty"`
 	Name      string             `yaml:"name,omitempty" json:"name,omitempty"`
@@ -20,31 +21,37 @@ type Bot struct {
 	Synonyms  []string           `yaml:"synonyms,omitempty" json:"synonyms,omitempty"`
 }
 
+// Entity ...
 type Entity struct {
 	Values []string `yaml:"values,omitempty" json:"values,omitempty"`
 }
 
+// Intent ...
 type Intent struct {
 	Examples []string `yaml:"examples,omitempty" json:"examples,omitempty"`
 }
 
+// State ...
 type State struct {
 	Message *Message `yaml:"message,omitempty" json:"message,omitempty"`
 	Action  string   `yaml:"action,omitempty" json:"action,omitempty"`
 	Next    []*Next  `yaml:"next,omitempty" json:"next,omitempty"`
 }
 
+// Message ...
 type Message struct {
 	Text    string   `yaml:"text,omitempty" json:"text,omitempty"`
 	Options []string `yaml:"options,omitempty" json:"options,omitempty"`
 }
 
+// Next ...
 type Next struct {
 	State  string         `yaml:"state,omitempty" json:"state,omitempty"`
 	If     string         `yaml:"if,omitempty" json:"if,omitempty"`
 	IfExpr ast.Expression `yaml:"-" json:"-"`
 }
 
+// HasOption ...
 func (m *Message) HasOption(o string) bool {
 	for _, o2 := range m.Options {
 		if o == o2 {
@@ -54,6 +61,7 @@ func (m *Message) HasOption(o string) bool {
 	return false
 }
 
+// Validate ...
 func (b *Bot) Validate() error {
 	if b.ID == "" {
 		return errors.New("no bot ID provided")
@@ -99,6 +107,7 @@ func (b *Bot) Validate() error {
 	return nil
 }
 
+// Validate ...
 func (i *Intent) Validate(iid string) error {
 	if len(i.Examples) == 0 {
 		return fmt.Errorf("no examples for intent '%s'", iid)
@@ -106,6 +115,7 @@ func (i *Intent) Validate(iid string) error {
 	return nil
 }
 
+// Validate ...
 func (s *State) Validate(sid string, b *Bot) error {
 	if s.Message == nil {
 		return fmt.Errorf("missing message in state '%s'", sid)
@@ -144,14 +154,16 @@ func (s *State) Validate(sid string, b *Bot) error {
 	return nil
 }
 
-func (bot *Bot) Value() (driver.Value, error) {
-	return json.Marshal(bot)
+// Value ...
+func (b *Bot) Value() (driver.Value, error) {
+	return json.Marshal(b)
 }
 
-func (bot *Bot) Scan(data interface{}) error {
-	b, ok := data.([]byte)
+// Scan ...
+func (b *Bot) Scan(data interface{}) error {
+	bs, ok := data.([]byte)
 	if !ok {
 		return errors.New("failed to scan, expected []byte")
 	}
-	return json.Unmarshal(b, &bot)
+	return json.Unmarshal(bs, &b)
 }

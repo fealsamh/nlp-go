@@ -7,16 +7,20 @@ import (
 	"text/scanner"
 )
 
+// Token ...
 type Token struct {
 	tok      rune
 	Text     string
 	Position scanner.Position
 }
 
+// Kind ...
 func (t *Token) Kind() string { return scanner.TokenString(t.tok) }
 
+// IsSymbol ...
 func (t *Token) IsSymbol() bool { return scanner.TokenString(t.tok)[0] == '"' }
 
+// Value ...
 func (t *Token) Value() interface{} {
 	switch t.tok {
 	case scanner.String, scanner.RawString:
@@ -42,16 +46,22 @@ func (t *Token) Value() interface{} {
 	}
 }
 
+// IsIdent ...
 func (t *Token) IsIdent() bool { return t.tok == scanner.Ident }
 
+// IsString ...
 func (t *Token) IsString() bool { return t.tok == scanner.String || t.tok == scanner.RawString }
 
+// IsInt ...
 func (t *Token) IsInt() bool { return t.tok == scanner.Int }
 
+// IsFloat ...
 func (t *Token) IsFloat() bool { return t.tok == scanner.Float }
 
+// IsEOF ...
 func (t *Token) IsEOF() bool { return t.tok == scanner.EOF }
 
+// Tokenise ...
 func Tokenise(code string) ([]*Token, error) {
 	var s scanner.Scanner
 	s.Init(strings.NewReader(code))

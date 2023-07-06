@@ -6,6 +6,7 @@ type deployRequest struct {
 	Bot *Bot `json:"bot"`
 }
 
+// DeployResult ...
 type DeployResult string
 
 var results = map[int]DeployResult{
@@ -13,6 +14,7 @@ var results = map[int]DeployResult{
 	http.StatusAccepted: "updated",
 }
 
+// Deploy ...
 func (c *Client) Deploy(bot *Bot) (DeployResult, error) {
 	s, err := c.callServicePost("/api/v1/bots", &deployRequest{
 		Bot: bot,

@@ -2,6 +2,7 @@ package slices
 
 import "reflect"
 
+// Contains ...
 func Contains(slice, el interface{}) bool {
 	slcval := reflect.ValueOf(slice)
 	if slcval.Kind() != reflect.Slice {
@@ -22,6 +23,7 @@ func Contains(slice, el interface{}) bool {
 	return false
 }
 
+// Equal ...
 func Equal(slice1, slice2 interface{}) bool {
 	slcval1 := reflect.ValueOf(slice1)
 	if slcval1.Kind() != reflect.Slice {

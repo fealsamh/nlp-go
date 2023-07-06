@@ -8,6 +8,7 @@ import (
 	"github.com/fealsamh/nlp-go/utils/slices"
 )
 
+// CheckStructTags ...
 func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 	for typ.Kind() == reflect.Ptr {
 		typ = typ.Elem()
@@ -41,10 +42,12 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 	return nil
 }
 
+// CheckJSONTags ...
 func CheckJSONTags(typ reflect.Type, terms ...string) error {
 	return CheckStructTags("json", typ, terms...)
 }
 
+// CheckXMLTags ...
 func CheckXMLTags(typ reflect.Type, terms ...string) error {
 	return CheckStructTags("xml", typ, terms...)
 }

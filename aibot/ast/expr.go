@@ -6,10 +6,12 @@ import (
 	"text/scanner"
 )
 
+// EvalContext ...
 type EvalContext struct {
 	val map[string]Value
 }
 
+// Set ...
 func (c *EvalContext) Set(k string, v Value) {
 	if c.val == nil {
 		c.val = make(map[string]Value)
@@ -17,23 +19,27 @@ func (c *EvalContext) Set(k string, v Value) {
 	c.val[k] = v
 }
 
+// Get ...
 func (c *EvalContext) Get(k string) (Value, bool) {
 	v, ok := c.val[k]
 	return v, ok
 }
 
+// Expression ...
 type Expression interface {
 	fmt.Stringer
 	Eval(*EvalContext) (Value, error)
 	Position() scanner.Position
 }
 
+// EqExpr ...
 type EqExpr struct {
-	Lhs Expression
-	Rhs Expression
+	LHS Expression
+	RHS Expression
 	pos scanner.Position
 }
 
+// Eval ...
 func (e *EqExpr) Eval(ctx *EvalContext) (Value, error) {
 	v1, err := e.Lhs.Eval(ctx)
 	if err != nil {
@@ -48,14 +54,17 @@ func (e *EqExpr) Eval(ctx *EvalContext) (Value, error) {
 
 func (e *EqExpr) String() string { return fmt.Sprintf("%s = %s", e.Lhs, e.Rhs) }
 
+// Position ...
 func (e *EqExpr) Position() scanner.Position { return e.pos }
 
+// IneqExpr ...
 type IneqExpr struct {
-	Lhs Expression
-	Rhs Expression
+	LHS Expression
+	RHS Expression
 	pos scanner.Position
 }
 
+// Eval ...
 func (e *IneqExpr) Eval(ctx *EvalContext) (Value, error) {
 	v1, err := e.Lhs.Eval(ctx)
 	if err != nil {
@@ -70,13 +79,16 @@ func (e *IneqExpr) Eval(ctx *EvalContext) (Value, error) {
 
 func (e *IneqExpr) String() string { return fmt.Sprintf("%s /= %s", e.Lhs, e.Rhs) }
 
+// Position ...
 func (e *IneqExpr) Position() scanner.Position { return e.pos }
 
+// IdentExpr ...
 type IdentExpr struct {
 	Name string
 	pos  scanner.Position
 }
 
+// Eval ...
 func (e *IdentExpr) Eval(ctx *EvalContext) (Value, error) {
 	v, ok := ctx.Get(e.Name)
 	if !ok {
@@ -87,17 +99,21 @@ func (e *IdentExpr) Eval(ctx *EvalContext) (Value, error) {
 
 func (e *IdentExpr) String() string { return e.Name }
 
+// Position ...
 func (e *IdentExpr) Position() scanner.Position { return e.pos }
 
+// StringExpr ...
 type StringExpr struct {
 	Value string
 	pos   scanner.Position
 }
 
+// Eval ...
 func (e *StringExpr) Eval(ctx *EvalContext) (Value, error) {
 	return &String{Value: e.Value}, nil
 }
 
 func (e *StringExpr) String() string { return strconv.Quote(e.Value) }
 
+// Position ...
 func (e *StringExpr) Position() scanner.Position { return e.pos }

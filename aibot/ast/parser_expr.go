@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// ParseExpr ...
 func ParseExpr(tokens []*Token) (Expression, error) {
 	return parseComp(&parsingCtx{
 		tokens: tokens,

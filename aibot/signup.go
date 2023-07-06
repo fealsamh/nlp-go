@@ -8,6 +8,7 @@ type signupRequest struct {
 	OrgName  string `json:"org_name"`
 }
 
+// Signup ...
 func (c *Client) Signup(username, fullname, email, password, orgName string) error {
 	if _, err := c.callServicePost("/api/v1/signup", &signupRequest{
 		Username: username,
