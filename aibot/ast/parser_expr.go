@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// ParseExpr ...
 func ParseExpr(tokens []*Token) (Expression, error) {
 	return parseComp(&parsingCtx{
 		tokens: tokens,
@@ -33,9 +34,9 @@ func parseComp(ctx *parsingCtx) (Expression, error) {
 
 	switch s {
 	case "=":
-		return &EqExpr{Lhs: e1, Rhs: e2, pos: pos}, nil
+		return &EqExpr{LHS: e1, RHS: e2, pos: pos}, nil
 	case "/=":
-		return &IneqExpr{Lhs: e1, Rhs: e2, pos: pos}, nil
+		return &IneqExpr{LHS: e1, RHS: e2, pos: pos}, nil
 	}
 
 	panic("arrived at unreachable branch")

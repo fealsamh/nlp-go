@@ -47,8 +47,8 @@ func getSecretKey() string {
 }
 
 func main() {
-	var serviceUrl, regExp string
-	flag.StringVar(&serviceUrl, "s", aibot.DefaultServiceURL, "service URL")
+	var serviceURL, regExp string
+	flag.StringVar(&serviceURL, "s", aibot.DefaultServiceURL, "service URL")
 	flag.StringVar(&regExp, "r", "", "regular expression")
 	flag.Parse()
 
@@ -56,7 +56,7 @@ func main() {
 		exitWithMessage("no command provided")
 	}
 	cmd := flag.Arg(0)
-	cl := &aibot.Client{ServiceURL: serviceUrl}
+	cl := &aibot.Client{ServiceURL: serviceURL}
 	processed := true
 
 	var re *regexp.Regexp

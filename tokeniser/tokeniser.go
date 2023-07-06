@@ -5,13 +5,17 @@ import (
 	"strings"
 )
 
-// A token type.
+// TokenType ...
 type TokenType int
 
 const (
+	// Word ...
 	Word TokenType = iota
+	// Number ...
 	Number
+	// Symbol ...
 	Symbol
+	// EOF ...
 	EOF
 )
 
@@ -30,7 +34,7 @@ func (t TokenType) String() string {
 	}
 }
 
-// A token.
+// Token ...
 type Token struct {
 	// The token's type.
 	Type TokenType
@@ -48,7 +52,7 @@ func (t *Token) String() string {
 	return fmt.Sprintf("%s/%s", string(t.Form), t.Type)
 }
 
-// A tokeniser which takes into account comments and special characters in identifiers.
+// Tokeniser ...
 type Tokeniser struct {
 	IdentChars string
 }
@@ -71,7 +75,7 @@ const (
 	number
 )
 
-// Tokenises a text.
+// Tokenise tokenises a text.
 func (t *Tokeniser) Tokenise(text string) []*Token {
 	runes := []rune(text)
 	var tokens []*Token
