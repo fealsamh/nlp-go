@@ -10,6 +10,7 @@ type signinResponse struct {
 	OrgName   string `json:"org_name"`
 }
 
+// Signin ...
 func (c *Client) Signin(username, password string) (string, string, error) {
 	var out *signinResponse
 	if _, err := c.callServicePost("/api/v1/signin", &signinRequest{

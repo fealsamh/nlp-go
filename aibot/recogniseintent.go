@@ -5,6 +5,7 @@ type recogniseIntentRequest struct {
 	Text  string `json:"text"`
 }
 
+// IntentSimilarity ...
 type IntentSimilarity struct {
 	IntentID   string  `json:"intent_id"`
 	Similarity float64 `json:"similarity"`
@@ -15,10 +16,11 @@ type recogniseIntentResponse struct {
 	Entities map[string][]string `json:"entities"`
 }
 
-func (c *Client) RecogniseIntent(botId, text string) ([]IntentSimilarity, map[string][]string, error) {
+// RecogniseIntent ...
+func (c *Client) RecogniseIntent(botID, text string) ([]IntentSimilarity, map[string][]string, error) {
 	var r *recogniseIntentResponse
 	if _, err := c.callServicePost("/api/v1/bots/intents", &recogniseIntentRequest{
-		BotID: botId,
+		BotID: botID,
 		Text:  text,
 	}, &r); err != nil {
 		return nil, nil, err

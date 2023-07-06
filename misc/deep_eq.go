@@ -6,6 +6,7 @@ import (
 	"sort"
 )
 
+// DeepInequalityReason ...
 type DeepInequalityReason struct {
 	IsError bool
 	Text    string
@@ -15,11 +16,11 @@ type DeepInequalityReason struct {
 func (r *DeepInequalityReason) String() string {
 	if r.Args == nil {
 		return r.Text
-	} else {
-		return fmt.Sprintf("%s (%v, %v)", r.Text, r.Args[0], r.Args[1])
 	}
+	return fmt.Sprintf("%s (%v, %v)", r.Text, r.Args[0], r.Args[1])
 }
 
+// IsDeeplyEqual ...
 func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 	t1 := reflect.TypeOf(a1)
 	t2 := reflect.TypeOf(a2)
@@ -39,25 +40,22 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 		eq := v1.Interface().(string) == v2.Interface().(string)
 		if eq {
 			return true, nil
-		} else {
-			return false, &DeepInequalityReason{Text: "strings not equal", Args: []interface{}{v1, v2}}
 		}
+		return false, &DeepInequalityReason{Text: "strings not equal", Args: []interface{}{v1, v2}}
 	case reflect.Int:
 		eq := v1.Interface().(int) == v2.Interface().(int)
 		if eq {
 			return true, nil
-		} else {
-			return false, &DeepInequalityReason{Text: "ints not equal", Args: []interface{}{v1, v2}}
 		}
+		return false, &DeepInequalityReason{Text: "ints not equal", Args: []interface{}{v1, v2}}
 	case reflect.Float64:
 		x1 := v1.Interface().(float64)
 		x2 := v2.Interface().(float64)
 		eq := x1/x2 > 1-.0000001 && x1/x2 < 1+.0000001
 		if eq {
 			return true, nil
-		} else {
-			return false, &DeepInequalityReason{Text: "float64s not equal", Args: []interface{}{v1, v2}}
 		}
+		return false, &DeepInequalityReason{Text: "float64s not equal", Args: []interface{}{v1, v2}}
 	case reflect.Struct:
 		for i := 0; i < t1.NumField(); i++ {
 			a1 := v1.Field(i)
@@ -98,6 +96,7 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 	return true, nil
 }
 
+// GetSortedMapKeys ...
 func GetSortedMapKeys(m interface{}) interface{} {
 	v := reflect.ValueOf(m)
 	if v.Kind() != reflect.Map {

@@ -7,8 +7,8 @@ import (
 	"github.com/fealsamh/nlp-go/aibot"
 )
 
-func recogniseIntent(cl *aibot.Client, botId, text string) {
-	r, e, err := cl.RecogniseIntent(botId, text)
+func recogniseIntent(cl *aibot.Client, botID, text string) {
+	r, e, err := cl.RecogniseIntent(botID, text)
 	if err != nil {
 		exitWithError(err)
 	}
