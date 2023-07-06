@@ -41,18 +41,18 @@ type EqExpr struct {
 
 // Eval ...
 func (e *EqExpr) Eval(ctx *EvalContext) (Value, error) {
-	v1, err := e.Lhs.Eval(ctx)
+	v1, err := e.LHS.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
-	v2, err := e.Rhs.Eval(ctx)
+	v2, err := e.RHS.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return &Bool{Value: v1.Equals(v2)}, nil
 }
 
-func (e *EqExpr) String() string { return fmt.Sprintf("%s = %s", e.Lhs, e.Rhs) }
+func (e *EqExpr) String() string { return fmt.Sprintf("%s = %s", e.LHS, e.RHS) }
 
 // Position ...
 func (e *EqExpr) Position() scanner.Position { return e.pos }
@@ -66,18 +66,18 @@ type IneqExpr struct {
 
 // Eval ...
 func (e *IneqExpr) Eval(ctx *EvalContext) (Value, error) {
-	v1, err := e.Lhs.Eval(ctx)
+	v1, err := e.LHS.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
-	v2, err := e.Rhs.Eval(ctx)
+	v2, err := e.RHS.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return &Bool{Value: !v1.Equals(v2)}, nil
 }
 
-func (e *IneqExpr) String() string { return fmt.Sprintf("%s /= %s", e.Lhs, e.Rhs) }
+func (e *IneqExpr) String() string { return fmt.Sprintf("%s /= %s", e.LHS, e.RHS) }
 
 // Position ...
 func (e *IneqExpr) Position() scanner.Position { return e.pos }
