@@ -14,14 +14,6 @@ type Value interface {
 	Equals(Value) bool
 }
 
-// Must ...
-func Must(v Value, err error) Value {
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
 // NewValue ...
 func NewValue(x interface{}) (Value, error) {
 	switch x := x.(type) {
