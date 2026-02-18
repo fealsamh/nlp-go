@@ -9,7 +9,7 @@ import (
 type DeepEqStruct struct {
 	S string
 	N int
-	I interface{}
+	I any
 }
 
 type BadDeepEqStruct struct {

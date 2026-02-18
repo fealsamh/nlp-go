@@ -10,7 +10,7 @@ import (
 
 // CheckStructTags ...
 func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
-	for typ.Kind() == reflect.Ptr {
+	for typ.Kind() == reflect.Pointer {
 		typ = typ.Elem()
 	}
 	for i := 0; i < typ.NumField(); i++ {
