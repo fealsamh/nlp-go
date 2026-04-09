@@ -10,7 +10,7 @@ import (
 type Value interface {
 	fmt.Stringer
 	Kind() reflect.Kind
-	Interface() interface{}
+	Interface() any
 	Equals(Value) bool
 }
 
@@ -26,7 +26,7 @@ func (v *String) Kind() reflect.Kind { return reflect.String }
 func (v *String) String() string { return strconv.Quote(v.Value) }
 
 // Interface ...
-func (v *String) Interface() interface{} { return v.Value }
+func (v *String) Interface() any { return v.Value }
 
 // Equals ...
 func (v *String) Equals(v2 Value) bool {
@@ -53,7 +53,7 @@ func (v *Bool) String() string {
 }
 
 // Interface ...
-func (v *Bool) Interface() interface{} { return v.Value }
+func (v *Bool) Interface() any { return v.Value }
 
 // Equals ...
 func (v *Bool) Equals(v2 Value) bool {

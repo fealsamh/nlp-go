@@ -12,22 +12,22 @@ func TestStructTags(t *testing.T) {
 	assert := assert.New(t)
 
 	for _, t := range []reflect.Type{
-		reflect.TypeOf((*Bot)(nil)),
-		reflect.TypeOf((*Entity)(nil)),
-		reflect.TypeOf((*Intent)(nil)),
-		reflect.TypeOf((*State)(nil)),
-		reflect.TypeOf((*Message)(nil)),
-		reflect.TypeOf((*Next)(nil)),
-		reflect.TypeOf((*User)(nil)),
-		reflect.TypeOf((*IntentSimilarity)(nil)),
-		reflect.TypeOf((*deployRequest)(nil)),
-		reflect.TypeOf((*recogniseIntentRequest)(nil)),
-		reflect.TypeOf((*signinRequest)(nil)),
-		reflect.TypeOf((*signinRequest)(nil)),
-		reflect.TypeOf((*getBotResponse)(nil)),
-		reflect.TypeOf((*listBotsResponse)(nil)),
-		reflect.TypeOf((*recogniseIntentResponse)(nil)),
-		reflect.TypeOf((*signinResponse)(nil)),
+		reflect.TypeFor[*Bot](),
+		reflect.TypeFor[*Entity](),
+		reflect.TypeFor[*Intent](),
+		reflect.TypeFor[*State](),
+		reflect.TypeFor[*Message](),
+		reflect.TypeFor[*Next](),
+		reflect.TypeFor[*User](),
+		reflect.TypeFor[*IntentSimilarity](),
+		reflect.TypeFor[*deployRequest](),
+		reflect.TypeFor[*recogniseIntentRequest](),
+		reflect.TypeFor[*signinRequest](),
+		reflect.TypeFor[*signinRequest](),
+		reflect.TypeFor[*getBotResponse](),
+		reflect.TypeFor[*listBotsResponse](),
+		reflect.TypeFor[*recogniseIntentResponse](),
+		reflect.TypeFor[*signinResponse](),
 	} {
 		err := misc.CheckJSONTags(t, "id")
 		assert.Nil(err)
