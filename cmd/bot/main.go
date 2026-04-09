@@ -12,7 +12,7 @@ import (
 	"github.com/fealsamh/nlp-go/aibot"
 )
 
-func exitWithMessage(msg string, args ...interface{}) {
+func exitWithMessage(msg string, args ...any) {
 	fmt.Fprintf(os.Stderr, msg+"\n", args...)
 	os.Exit(1)
 }

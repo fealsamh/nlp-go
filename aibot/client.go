@@ -20,15 +20,15 @@ type Client struct {
 	SecretKey  string
 }
 
-func (c *Client) callServiceGet(path string, out interface{}) (int, error) {
+func (c *Client) callServiceGet(path string, out any) (int, error) {
 	return c.callService(http.MethodGet, path, nil, out)
 }
 
-func (c *Client) callServicePost(path string, in, out interface{}) (int, error) {
+func (c *Client) callServicePost(path string, in, out any) (int, error) {
 	return c.callService(http.MethodPost, path, in, out)
 }
 
-func (c *Client) callService(method, path string, in, out interface{}) (int, error) {
+func (c *Client) callService(method, path string, in, out any) (int, error) {
 	var rd io.Reader
 	if in != nil {
 		b, err := json.Marshal(in)
