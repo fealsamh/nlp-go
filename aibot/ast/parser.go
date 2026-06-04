@@ -37,6 +37,12 @@ func parseOneOf(ctx *parsingCtx, l ...string) (string, error) {
 	})
 	t := ctx.token(0)
 	for _, s := range l {
+		if t.IsIdent() && t.Text == s {
+			if err := ctx.advance(1); err != nil {
+				return "", err
+			}
+			return s, nil
+		}
 		m, err := parseSym(ctx, s)
 		if err != nil {
 			return "", err
@@ -45,14 +51,16 @@ func parseOneOf(ctx *parsingCtx, l ...string) (string, error) {
 			return s, nil
 		}
 	}
-	return "", fmt.Errorf("expected one of %s (%s)", strings.Join(l, ", "), t.Position)
+	return "", &errorNotFound{
+		msg: fmt.Sprintf("expected one of %s (%s)", strings.Join(l, ", "), t.Position),
+	}
 }
 
 func parseSym(ctx *parsingCtx, s string) (bool, error) {
 	for i := 0; i < len(s); i++ {
 		t := ctx.token(i)
 		if t.IsEOF() {
-			return false, errors.New("unexpected end of file")
+			return false, &errorEOF{}
 		}
 		if !t.IsSymbol() || t.Text != s[i:i+1] {
 			return false, nil
@@ -63,3 +71,29 @@ func parseSym(ctx *parsingCtx, s string) (bool, error) {
 	}
 	return true, nil
 }
+
+type errorKind int
+
+const (
+	errorKindNotFound errorKind = iota
+	errorKindEOF
+)
+
+// ParseError ...
+type ParseError interface {
+	Kind() errorKind
+}
+
+type errorNotFound struct {
+	msg string
+}
+
+func (e *errorNotFound) Error() string { return e.msg }
+
+func (e *errorNotFound) Kind() errorKind { return errorKindNotFound }
+
+type errorEOF struct{}
+
+func (e *errorEOF) Error() string { return "unexpected end of file" }
+
+func (e *errorEOF) Kind() errorKind { return errorKindEOF }
