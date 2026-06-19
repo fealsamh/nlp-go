@@ -13,8 +13,8 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 	for typ.Kind() == reflect.Pointer {
 		typ = typ.Elem()
 	}
-	for i := 0; i < typ.NumField(); i++ {
-		f := typ.Field(i)
+	for f := range typ.Fields() {
+		f := f
 		if slices.Contains([]string{"0", "no", "false"}, f.Tag.Get("check")) {
 			continue
 		}
@@ -23,7 +23,7 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 			return fmt.Errorf("nil '%s' struct tag for %s.%s", tagAttr, typ, f.Name)
 		}
 		if !f.Anonymous {
-			tagName := strings.Split(tag, ",")[0]
+			tagName, _, _ := strings.Cut(tag, ",")
 			if f.Name == "XMLName" {
 				typName := SnakecasedFromCamelcased(typ.Name())
 				comps := strings.Split(tagName, " ")
