@@ -15,7 +15,7 @@ type Value interface {
 }
 
 // NewValue ...
-func NewValue(x interface{}) (Value, error) {
+func NewValue(x any) (Value, error) {
 	switch x := x.(type) {
 	case bool:
 		return &Bool{Value: x}, nil
@@ -41,7 +41,7 @@ func (v *Int) Kind() reflect.Kind { return reflect.Int }
 func (v *Int) String() string { return strconv.Itoa(v.Value) }
 
 // Interface ...
-func (v *Int) Interface() interface{} { return v.Value }
+func (v *Int) Interface() any { return v.Value }
 
 // Equals ...
 func (v *Int) Equals(v2 Value) bool {
@@ -63,7 +63,7 @@ func (v *Float) Kind() reflect.Kind { return reflect.Float64 }
 func (v *Float) String() string { return fmt.Sprintf("%f", v.Value) }
 
 // Interface ...
-func (v *Float) Interface() interface{} { return v.Value }
+func (v *Float) Interface() any { return v.Value }
 
 // Equals ...
 func (v *Float) Equals(v2 Value) bool {
