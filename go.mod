@@ -1,6 +1,6 @@
 module github.com/fealsamh/nlp-go
 
-go 1.26.1
+go 1.25
 
 require (
 	github.com/stretchr/testify v1.12.0
