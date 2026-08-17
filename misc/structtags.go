@@ -14,7 +14,6 @@ func CheckStructTags(tagAttr string, typ reflect.Type, terms ...string) error {
 		typ = typ.Elem()
 	}
 	for f := range typ.Fields() {
-		f := f
 		if slices.Contains([]string{"0", "no", "false"}, f.Tag.Get("check")) {
 			continue
 		}
