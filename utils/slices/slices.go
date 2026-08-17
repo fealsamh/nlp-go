@@ -3,7 +3,7 @@ package slices
 import "reflect"
 
 // Contains ...
-func Contains(slice, el interface{}) bool {
+func Contains(slice, el any) bool {
 	slcval := reflect.ValueOf(slice)
 	if slcval.Kind() != reflect.Slice {
 		panic("slices.Contains: first argument not a slice")
@@ -24,7 +24,7 @@ func Contains(slice, el interface{}) bool {
 }
 
 // Equal ...
-func Equal(slice1, slice2 interface{}) bool {
+func Equal(slice1, slice2 any) bool {
 	slcval1 := reflect.ValueOf(slice1)
 	if slcval1.Kind() != reflect.Slice {
 		panic("slices.Equal: first argument not a slice")

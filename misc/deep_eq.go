@@ -10,7 +10,7 @@ import (
 type DeepInequalityReason struct {
 	IsError bool
 	Text    string
-	Args    []interface{}
+	Args    []any
 }
 
 func (r *DeepInequalityReason) String() string {
@@ -21,15 +21,15 @@ func (r *DeepInequalityReason) String() string {
 }
 
 // IsDeeplyEqual ...
-func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
+func IsDeeplyEqual(a1, a2 any) (bool, *DeepInequalityReason) {
 	t1 := reflect.TypeOf(a1)
 	t2 := reflect.TypeOf(a2)
 	if t1 != t2 {
-		return false, &DeepInequalityReason{Text: "different types", Args: []interface{}{t1, t2}}
+		return false, &DeepInequalityReason{Text: "different types", Args: []any{t1, t2}}
 	}
 	v1 := reflect.ValueOf(a1)
 	v2 := reflect.ValueOf(a2)
-	for t1.Kind() == reflect.Ptr {
+	for t1.Kind() == reflect.Pointer {
 		t1 = t1.Elem()
 		t2 = t2.Elem()
 		v1 = v1.Elem()
@@ -41,13 +41,13 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 		if eq {
 			return true, nil
 		}
-		return false, &DeepInequalityReason{Text: "strings not equal", Args: []interface{}{v1, v2}}
+		return false, &DeepInequalityReason{Text: "strings not equal", Args: []any{v1, v2}}
 	case reflect.Int:
 		eq := v1.Interface().(int) == v2.Interface().(int)
 		if eq {
 			return true, nil
 		}
-		return false, &DeepInequalityReason{Text: "ints not equal", Args: []interface{}{v1, v2}}
+		return false, &DeepInequalityReason{Text: "ints not equal", Args: []any{v1, v2}}
 	case reflect.Float64:
 		x1 := v1.Interface().(float64)
 		x2 := v2.Interface().(float64)
@@ -55,7 +55,7 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 		if eq {
 			return true, nil
 		}
-		return false, &DeepInequalityReason{Text: "float64s not equal", Args: []interface{}{v1, v2}}
+		return false, &DeepInequalityReason{Text: "float64s not equal", Args: []any{v1, v2}}
 	case reflect.Struct:
 		for i := 0; i < t1.NumField(); i++ {
 			a1 := v1.Field(i)
@@ -67,7 +67,7 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 		}
 	case reflect.Slice:
 		if v1.Len() != v2.Len() {
-			return false, &DeepInequalityReason{Text: "different slice lengths", Args: []interface{}{v1, v2}}
+			return false, &DeepInequalityReason{Text: "different slice lengths", Args: []any{v1, v2}}
 		}
 		for i := 0; i < v1.Len(); i++ {
 			eq, reason := IsDeeplyEqual(v1.Index(i).Interface(), v2.Index(i).Interface())
@@ -79,7 +79,7 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 		keys1 := GetSortedMapKeys(v1.Interface())
 		keys2 := GetSortedMapKeys(v2.Interface())
 		if !reflect.DeepEqual(keys1, keys2) {
-			return false, &DeepInequalityReason{Text: "different map keys", Args: []interface{}{v1, v2}}
+			return false, &DeepInequalityReason{Text: "different map keys", Args: []any{v1, v2}}
 		}
 		for _, k := range v1.MapKeys() {
 			eq, reason := IsDeeplyEqual(v1.MapIndex(k).Interface(), v2.MapIndex(k).Interface())
@@ -97,7 +97,7 @@ func IsDeeplyEqual(a1, a2 interface{}) (bool, *DeepInequalityReason) {
 }
 
 // GetSortedMapKeys ...
-func GetSortedMapKeys(m interface{}) interface{} {
+func GetSortedMapKeys(m any) any {
 	v := reflect.ValueOf(m)
 	if v.Kind() != reflect.Map {
 		panic("expected map")

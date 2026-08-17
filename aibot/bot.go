@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"slices"
 
 	"github.com/fealsamh/nlp-go/aibot/ast"
 )
@@ -53,12 +54,7 @@ type Next struct {
 
 // HasOption ...
 func (m *Message) HasOption(o string) bool {
-	for _, o2 := range m.Options {
-		if o == o2 {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(m.Options, o)
 }
 
 // Validate ...
@@ -160,7 +156,7 @@ func (b *Bot) Value() (driver.Value, error) {
 }
 
 // Scan ...
-func (b *Bot) Scan(data interface{}) error {
+func (b *Bot) Scan(data any) error {
 	bs, ok := data.([]byte)
 	if !ok {
 		return errors.New("failed to scan, expected []byte")

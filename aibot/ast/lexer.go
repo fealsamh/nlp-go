@@ -21,7 +21,7 @@ func (t *Token) Kind() string { return scanner.TokenString(t.tok) }
 func (t *Token) IsSymbol() bool { return scanner.TokenString(t.tok)[0] == '"' }
 
 // Value ...
-func (t *Token) Value() interface{} {
+func (t *Token) Value() any {
 	switch t.tok {
 	case scanner.String, scanner.RawString:
 		s, err := strconv.Unquote(t.Text)
